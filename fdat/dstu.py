@@ -1,4 +1,5 @@
 from social.backends.base import BaseAuth
+from social.backends.oauth import BaseOAuth2
 from social.exceptions import AuthCanceled, AuthUnknownError, \
                               AuthMissingParameter, AuthStateMissing, \
                               AuthStateForbidden
@@ -144,3 +145,10 @@ class EusignFull(BaseAuth):
     @property
     def dstud_url(self):
         return self.setting('DSTUD_URL')
+
+
+class EusignOauth2(BaseOAuth2):
+    name = 'eusign_oauth2'
+
+    AUTHORIZATION_URL = 'https://eusign.org/oauth'
+    ACCESS_TOKEN_URL = 'https://eusign.org/oauth/access_token'
