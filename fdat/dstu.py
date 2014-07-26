@@ -151,4 +151,27 @@ class EusignOauth2(BaseOAuth2):
     name = 'eusign_oauth2'
 
     AUTHORIZATION_URL = 'https://eusign.org/oauth'
-    ACCESS_TOKEN_URL = 'https://eusign.org/oauth/access_token'
+    ACCESS_TOKEN_URL = 'http://localhost:5001/oauth/token'
+    API_BASE = 'http://localhost:5001'
+
+    def user_data(self, access_token, *args, **kwargs):
+        """Loads user data from service"""
+        data = self._user_data(access_token)
+        return data
+
+    def _user_data(self, access_token, path=None):
+        url = '{}/api/1/users/{}'.format(self.API_BASE, path or 'me')
+        return self.get_json(url, params={'access_token': access_token})
+
+    def get_user_details(self, response):
+        fullname, first_name, last_name = self.get_user_names(
+            response.get('name')
+        )
+        return {
+            'fullname': fullname,
+            'first_name': first_name,
+            'last_name': last_name,
+        }
+
+    def get_user_id(self, details, response):
+        return response['uniq']
